@@ -14,22 +14,20 @@ def run_simulation(teams, schedules):
 		games = obj.keys() # [Atlanta at Orlando, etc.]
 		for game in games:
 			away, home = get_team_names(game)
-			obj = obj[game] # lazy typing
+			ogame = obj[game]
 
-			if obj["away score"] == None or obj["home score"] == None:
+			if ogame["away score"] == None or ogame["home score"] == None:
 				continue
-			elif obj["away score"] == obj["home score"]:
+			elif ogame["away score"] == ogame["home score"]:
 				teams[away]['ties'] += 1
 				teams[home]['ties'] += 1
-			elif obj["away score"] > obj["home score"]:
+			elif ogame["away score"] > ogame["home score"]:
 				teams[away]['wins'] += 1
 				teams[home]['losses'] += 1
-			elif obj["away score"] < obj["home score"]:
+			elif ogame["away score"] < ogame["home score"]:
 				teams[away]['losses'] += 1
 				teams[home]['wins'] += 1
-
-	import pprint
-	pprint.pprint(teams)
+	return teams
 
 def get_teams():
 	teams = read_file("data/teams.json")
@@ -38,6 +36,10 @@ def get_teams():
 def get_schedules():
 	schedules = read_file("data/schedule.json")
 	return schedules
+
+def update_teams(teams):
+	write_file("data/teams.json", teams)
+	return teams
 
 def init_argparse():
 	parser = argparse.ArgumentParser(description='Updates the team\'s record once the scehdule is made')
@@ -48,7 +50,8 @@ def main():
 	args = init_argparse()
 	teams = get_teams()
 	schedules = get_schedules()
-	run_simulation(teams, schedules)
+	new_teams = run_simulation(teams, schedules)
+	update_teams(new_teams)
 	pass
 
 if __name__ == "__main__":
