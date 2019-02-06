@@ -16,14 +16,22 @@ def main():
 	args = init_argparse()
 	data = read_file(rel_path)
 
+	from pprint import pprint
+	pprint(data)
+
 	key = args.away + " at " + args.home
-	data[args.week] = {}
+	if not data[args.week]:
+		data[args.week] = {}
+	print(data)
 	data[args.week][key] = {
 		'away team': args.away,
 		'home team': args.home,
 		'away score': args.away_score,
 		'home score': args.home_score
 	}
+
+	print("asdfasdfasdf")
+	pprint(data)
 
 	write_file(rel_path, data)
 
